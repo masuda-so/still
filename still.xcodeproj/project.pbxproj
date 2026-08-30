@@ -21,9 +21,22 @@
 		A20000000000000000000121 /* stillTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = stillTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A30000000000000000000010 /* Exceptions for "still" folder in "still" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/StoreKit/StoreKit.storekit,
+			);
+			target = 000000000000000100000000 /* still */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		000000000000000000000010 /* still */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A30000000000000000000010 /* Exceptions for "still" folder in "still" target */,
+			);
 			path = still;
 			sourceTree = "<group>";
 		};
