@@ -1,7 +1,10 @@
 # Still
 
-Still is a quiet pause app built around short, optional moments of rest. It includes
-timed pause sessions and private local history.
+Still is a quiet pause app built around short, optional moments of rest. It
+includes timed pause sessions, cancellation without saving, and private local
+history for pauses that reach their selected duration. On-device guidance can
+propose a one- or two-minute pause, but cannot start its timer without explicit
+confirmation.
 
 ## Initial navigation
 
@@ -27,4 +30,5 @@ without a purchase. An active Daily Pass cannot be repurchased or stacked.
 
 - Apple Foundation Models provides on-device generation when the system supports it.
 - Still owns its prompt construction and AI client implementation locally.
+- Only responses with an explicit supported duration expose the review-and-start control.
 - Still owns its StoreKit integration locally, while Daily, Monthly, and Yearly retain the common plan shape used across the app family.

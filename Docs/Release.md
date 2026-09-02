@@ -8,10 +8,12 @@ current tree before submission.
 ## Implemented v1
 
 - iOS 18 minimum deployment target, iPhone/iPad support, Swift 6 app and tests.
-- Local SwiftData pause history with explicit start/end, deletion, transaction
-  rollback, and error presentation.
+- Local SwiftData history for pauses that reach their selected duration,
+  cancellation without saving, deletion, transaction rollback, and error
+  presentation.
 - On-device Foundation Models adapter with availability/language fallback,
-  cancellation, stable errors, and no remote AI provider.
+  cancellation, stable errors, no remote AI provider, and explicit confirmation
+  before a valid generated one- or two-minute proposal can start the timer.
 - StoreKit 2 product loading, purchase, restore, verified entitlements, finishing,
   updates, revocation filtering, and device-clock expiry policy.
 - Non-renewing Daily Pass plus Monthly and Yearly plans, local StoreKit fixtures,

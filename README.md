@@ -13,14 +13,16 @@ optional on-device guidance.
 ## Core experience
 
 Completed pauses are stored on device with SwiftData. People can choose a
-one-to-ten-minute duration, end a running pause, review recent sessions, and
-delete individual history entries.
+one-to-ten-minute duration, cancel a running pause without saving it, review
+recent sessions, and delete individual history entries.
 
 ## Intelligence and commerce
 
 The assistant uses Apple Foundation Models on supported devices and languages.
-It does not use a remote AI provider. The local StoreKit configuration defines
-the same three plan shapes used by the app family:
+It does not use a remote AI provider. A valid one- or two-minute suggestion shows
+its proposed length, and the timer starts only after the person reviews and
+confirms it. The local StoreKit configuration defines the same three plan shapes
+used by the app family:
 
 - `llc.ether.still.pro.daily`: non-renewing 24-hour Daily Pass.
 - `llc.ether.still.pro.monthly`: auto-renewable monthly plan.
