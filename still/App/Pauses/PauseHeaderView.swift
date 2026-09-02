@@ -4,10 +4,13 @@ See THIRD_PARTY_NOTICES.md for this sample's licensing information.
 This view adapts MeetingHeaderView from Apple's Scrumdinger tutorial.
 */
 
+import Foundation
 import SwiftUI
 
 /// Displays elapsed and remaining time for the current pause.
 struct PauseHeaderView: View {
+  @Environment(\.locale) private var locale
+
   let secondsElapsed: Int
   let secondsRemaining: Int
   let accentColor: Color
@@ -21,8 +24,24 @@ struct PauseHeaderView: View {
     return Double(secondsElapsed) / Double(totalSeconds)
   }
 
-  private var minutesRemaining: Int {
-    secondsRemaining / 60
+  private var accessibilityValue: String {
+    Self.accessibilityValue(
+      secondsRemaining: secondsRemaining,
+      locale: locale
+    )
+  }
+
+  /// Formats the remaining time with localized minute and second units.
+  nonisolated static func accessibilityValue(
+    secondsRemaining: Int,
+    locale: Locale
+  ) -> String {
+    let style = Duration.UnitsFormatStyle(
+      allowedUnits: [.minutes, .seconds],
+      width: .wide,
+      maximumUnitCount: 2
+    ).locale(locale)
+    return style.format(.seconds(max(secondsRemaining, 0)))
   }
 
   var body: some View {
@@ -46,7 +65,7 @@ struct PauseHeaderView: View {
     }
     .accessibilityElement(children: .ignore)
     .accessibilityLabel("Time remaining")
-    .accessibilityValue("\(minutesRemaining) minutes")
+    .accessibilityValue(accessibilityValue)
     .padding([.top, .horizontal])
   }
 }

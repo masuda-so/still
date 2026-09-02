@@ -16,6 +16,9 @@ final class LocalizationCatalogTests: XCTestCase {
 
       XCTAssertEqual(object["sourceLanguage"] as? String, "en", catalogURL.path)
       let strings = try XCTUnwrap(object["strings"] as? [String: Any])
+      if catalogURL.lastPathComponent == "Localizable.xcstrings" {
+        try validatePauseControlCopy(in: strings)
+      }
       var issues: [String] = []
 
       for key in strings.keys.sorted() {
@@ -98,6 +101,53 @@ final class LocalizationCatalogTests: XCTestCase {
       return array.flatMap(stringUnits(in:))
     }
     return []
+  }
+
+  private func validatePauseControlCopy(
+    in strings: [String: Any]
+  ) throws {
+    XCTAssertNil(strings["%lld minute pause"])
+    XCTAssertNil(strings["%lld minutes"])
+    XCTAssertNil(strings["End Pause"])
+    XCTAssertEqual(
+      try localizedValues(
+        for: "%lld-minute pause",
+        language: "en",
+        in: strings
+      ),
+      ["%lld-minute pause"]
+    )
+    XCTAssertEqual(
+      try localizedValues(
+        for: "%lld-minute pause",
+        language: "ja",
+        in: strings
+      ),
+      ["%lld分間の休息"]
+    )
+    XCTAssertEqual(
+      try localizedValues(
+        for: "Cancel Pause",
+        language: "ja",
+        in: strings
+      ),
+      ["休息を中止"]
+    )
+  }
+
+  private func localizedValues(
+    for key: String,
+    language: String,
+    in strings: [String: Any]
+  ) throws -> Set<String> {
+    let entry = try XCTUnwrap(strings[key] as? [String: Any])
+    let localizations = try XCTUnwrap(entry["localizations"] as? [String: Any])
+    let localization = try XCTUnwrap(localizations[language])
+    return Set(
+      stringUnits(in: localization).compactMap {
+        $0["value"] as? String
+      }
+    )
   }
 
   private func validate(

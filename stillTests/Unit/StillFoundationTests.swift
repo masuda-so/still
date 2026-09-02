@@ -32,6 +32,22 @@ final class StillFoundationTests: XCTestCase {
     XCTAssertFalse(product.tagline.isEmpty)
   }
 
+  func testActiveDailyPassIsHiddenFromPurchaseOptions() {
+    XCTAssertEqual(
+      ProductID.offeredProductIDs(dailyPassIsActive: false),
+      ProductID.all
+    )
+    XCTAssertEqual(
+      ProductID.offeredProductIDs(dailyPassIsActive: true),
+      ProductID.subscriptions
+    )
+    XCTAssertFalse(
+      ProductID.offeredProductIDs(dailyPassIsActive: true).contains(
+        StillCommerceCatalog.dailyPassProductID
+      )
+    )
+  }
+
   @MainActor
   func testApplicationSectionsRemainDistinct() {
     let sections: Set<AppSection> = [.pauses, .assistant, .pro, .settings]
@@ -139,6 +155,40 @@ final class StillFoundationTests: XCTestCase {
     )
   }
 
+  func testPauseHeaderFormatsRemainingTimeForVoiceOver() {
+    let english = Locale(identifier: "en_US")
+    XCTAssertEqual(
+      PauseHeaderView.accessibilityValue(
+        secondsRemaining: 59,
+        locale: english
+      ),
+      "59 seconds"
+    )
+    XCTAssertEqual(
+      PauseHeaderView.accessibilityValue(
+        secondsRemaining: 61,
+        locale: english
+      ),
+      "1 minute, 1 second"
+    )
+
+    let japanese = Locale(identifier: "ja_JP")
+    XCTAssertEqual(
+      PauseHeaderView.accessibilityValue(
+        secondsRemaining: 59,
+        locale: japanese
+      ),
+      "59秒"
+    )
+    let japaneseMinuteAndSecond = PauseHeaderView.accessibilityValue(
+      secondsRemaining: 61,
+      locale: japanese
+    )
+    XCTAssertTrue(japaneseMinuteAndSecond.contains("1分"))
+    XCTAssertTrue(japaneseMinuteAndSecond.contains("1秒"))
+    XCTAssertFalse(japaneseMinuteAndSecond.contains("0分"))
+  }
+
   @MainActor
   func testPauseTimerResetsWithTutorialMinuteVocabulary() {
     let pauseTimer = PauseTimer()
@@ -150,6 +200,13 @@ final class StillFoundationTests: XCTestCase {
     XCTAssertFalse(pauseTimer.isRunning)
   }
 
+  func testAssistantPauseRequestUsesTheSupportedShortRange() {
+    XCTAssertEqual(PausesView.normalizedRequestedDurationInMinutes(0), 1)
+    XCTAssertEqual(PausesView.normalizedRequestedDurationInMinutes(1), 1)
+    XCTAssertEqual(PausesView.normalizedRequestedDurationInMinutes(2), 2)
+    XCTAssertEqual(PausesView.normalizedRequestedDurationInMinutes(10), 2)
+  }
+
   @MainActor
   func testPauseTimerStartsAndStopsItsScheduledTimer() {
     let pauseTimer = PauseTimer(lengthInMinutes: 1)
@@ -158,6 +215,22 @@ final class StillFoundationTests: XCTestCase {
     XCTAssertTrue(pauseTimer.isRunning)
 
     pauseTimer.stopPause()
+    XCTAssertFalse(pauseTimer.isRunning)
+  }
+
+  @MainActor
+  func testCancellingPauseDoesNotCompleteIt() async {
+    let pauseTimer = PauseTimer()
+    var completionCount = 0
+    pauseTimer.pauseCompletedAction = {
+      completionCount += 1
+    }
+
+    pauseTimer.startPause()
+    pauseTimer.stopPause()
+    try? await Task.sleep(for: .milliseconds(100))
+
+    XCTAssertEqual(completionCount, 0)
     XCTAssertFalse(pauseTimer.isRunning)
   }
 
