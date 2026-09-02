@@ -20,4 +20,12 @@ nonisolated struct UnavailableAIClient: AIClient {
     }
     throw AIError.unavailable(reason)
   }
+
+  func generatePauseProposal(from request: AIRequest) async throws -> StillPauseProposal {
+    let trimmedPrompt = request.prompt.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !trimmedPrompt.isEmpty else {
+      throw AIError.emptyPrompt
+    }
+    throw AIError.unavailable(reason)
+  }
 }

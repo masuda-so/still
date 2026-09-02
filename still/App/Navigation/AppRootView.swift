@@ -10,15 +10,19 @@ enum AppSection: Hashable {
 struct AppRootView: View {
   @Environment(AppEnvironment.self) private var environment
   @State private var selection: AppSection = .pauses
+  @State private var requestedPauseDurationInMinutes: Int?
 
   var body: some View {
     TabView(selection: $selection) {
       Tab("Pauses", systemImage: "wind", value: .pauses) {
-        PausesView()
+        PausesView(requestedDurationInMinutes: $requestedPauseDurationInMinutes)
       }
 
       Tab("Assistant", systemImage: "sparkles", value: .assistant) {
-        AssistantView(selection: $selection)
+        AssistantView(selection: $selection) { durationInMinutes in
+          requestedPauseDurationInMinutes = durationInMinutes
+          selection = .pauses
+        }
       }
 
       Tab("Pro", systemImage: "crown", value: .pro) {

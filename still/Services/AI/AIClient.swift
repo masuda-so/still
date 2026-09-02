@@ -7,6 +7,17 @@ nonisolated protocol AIClient: Sendable {
 
   /// Responds to a validated request.
   func respond(to request: AIRequest) async throws -> AIResponse
+
+  /// Generates a typed pause proposal without relying on a text-format contract.
+  func generatePauseProposal(from request: AIRequest) async throws -> StillPauseProposal
+}
+
+extension AIClient {
+  func generatePauseProposal(from request: AIRequest) async throws -> StillPauseProposal {
+    throw AIError.generationFailed(
+      debugDescription: "This AI client does not implement guided pause generation."
+    )
+  }
 }
 
 /// Creates the AI client used by the application.

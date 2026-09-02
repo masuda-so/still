@@ -3,8 +3,12 @@ import SwiftUI
 struct AssistantView: View {
   @Environment(AppEnvironment.self) private var environment
   @Binding var selection: AppSection
+  let onStartPause: (Int) -> Void
+
   @State private var text = ""
   @State private var generationTask: Task<Void, Never>?
+  @State private var pauseDurationInMinutes = 1
+  @State private var isConfirmingPause = false
 
   var body: some View {
     NavigationStack {
@@ -34,6 +38,18 @@ struct AssistantView: View {
       .onDisappear {
         generationTask?.cancel()
         generationTask = nil
+      }
+      .confirmationDialog(
+        "Start Suggested Pause?",
+        isPresented: $isConfirmingPause,
+        titleVisibility: .visible
+      ) {
+        Button("\(pauseDurationInMinutes)-minute pause") {
+          onStartPause(pauseDurationInMinutes)
+        }
+        Button("Cancel", role: .cancel) {}
+      } message: {
+        Text("The timer starts only after you confirm this pause.")
       }
     }
   }
@@ -79,7 +95,7 @@ struct AssistantView: View {
 
       if let response = environment.assistantResponse {
         Section {
-          Text(response)
+          Text(response.displayText)
             .textSelection(.enabled)
         } header: {
           Text(environment.product.assistantOutputTitle)
@@ -88,7 +104,43 @@ struct AssistantView: View {
             "Generated on this device with Apple Foundation Models. AI output may be inaccurate; review it before use."
           )
         }
+
+        if let recommendedDurationInMinutes = response.recommendedDurationInMinutes {
+          Section {
+            LabeledContent("Suggested length") {
+              Text("\(recommendedDurationInMinutes)-minute pause")
+            }
+
+            Picker("Pause length", selection: $pauseDurationInMinutes) {
+              ForEach(1...2, id: \.self) { durationInMinutes in
+                Text("\(durationInMinutes)-minute pause").tag(durationInMinutes)
+              }
+            }
+
+            Button("Start Suggested Pause") {
+              isConfirmingPause = true
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(environment.product.accent)
+
+            Button("Dismiss Suggestion", role: .cancel) {
+              environment.assistantResponse = nil
+            }
+          } header: {
+            Text("Suggested Pause")
+          } footer: {
+            Text("Review the AI suggestion and pause length before starting.")
+          }
+        }
       }
+    }
+    .onChange(of: environment.assistantResponse, initial: true) { _, response in
+      guard let response,
+        let recommendedDuration = response.recommendedDurationInMinutes
+      else {
+        return
+      }
+      pauseDurationInMinutes = recommendedDuration
     }
   }
 

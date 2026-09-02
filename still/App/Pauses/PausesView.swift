@@ -6,6 +6,8 @@ struct PausesView: View {
   @Environment(\.modelContext) private var modelContext
   @Query(sort: \Pause.endedAt, order: .reverse) private var pauses: [Pause]
 
+  @Binding var requestedDurationInMinutes: Int?
+
   @State private var pauseTimer = PauseTimer()
   @State private var durationInMinutes = 1
   @State private var startedAt: Date?
@@ -27,7 +29,10 @@ struct PausesView: View {
         .padding(24)
       }
       .navigationTitle("Still")
-      .onAppear(perform: preparePauseTimer)
+      .onAppear {
+        preparePauseTimer()
+        beginRequestedPauseIfNeeded()
+      }
       .onDisappear(perform: pauseTimer.stopPause)
       .confirmationDialog(
         "Delete Pause",
@@ -57,7 +62,7 @@ struct PausesView: View {
     CardView {
       VStack(spacing: 16) {
         Stepper(
-          "\(durationInMinutes) minute pause",
+          "\(durationInMinutes)-minute pause",
           value: $durationInMinutes,
           in: 1...10
         )
@@ -68,7 +73,7 @@ struct PausesView: View {
 
         Button(action: togglePause) {
           Label(
-            pauseTimer.isRunning ? "End Pause" : "Begin Pause",
+            pauseTimer.isRunning ? "Cancel Pause" : "Begin Pause",
             systemImage: pauseTimer.isRunning ? "stop.fill" : "play.fill"
           )
           .frame(maxWidth: .infinity)
@@ -117,10 +122,27 @@ struct PausesView: View {
     pauseTimer.pauseCompletedAction = saveCompletedPause
   }
 
+  private func beginRequestedPauseIfNeeded() {
+    guard let requestedDurationInMinutes else { return }
+
+    let duration = Self.normalizedRequestedDurationInMinutes(requestedDurationInMinutes)
+    self.requestedDurationInMinutes = nil
+    durationInMinutes = duration
+    startedAt = .now
+    pauseTimer.reset(lengthInMinutes: duration)
+    pauseTimer.startPause()
+  }
+
+  /// Keeps assistant-started pauses within the short range shown for generated guidance.
+  nonisolated static func normalizedRequestedDurationInMinutes(_ value: Int) -> Int {
+    min(max(value, 1), 2)
+  }
+
   private func togglePause() {
     if pauseTimer.isRunning {
       pauseTimer.stopPause()
       pauseTimer.reset(lengthInMinutes: durationInMinutes)
+      startedAt = nil
     } else {
       startedAt = .now
       pauseTimer.startPause()
@@ -182,7 +204,7 @@ struct PausesView: View {
 }
 
 #Preview {
-  PausesView()
+  PausesView(requestedDurationInMinutes: .constant(nil))
     .environment(AppEnvironment.preview)
     .sampleDataContainer()
 }

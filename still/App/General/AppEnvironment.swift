@@ -26,7 +26,7 @@ final class AppEnvironment {
       scheduleNextNonRenewingExpiration()
     }
   }
-  var assistantResponse: String?
+  var assistantResponse: StillPauseProposal?
   var assistantErrorMessage: String?
   var isGenerating = false
   var hasLoadedInitialState = false
@@ -65,6 +65,11 @@ final class AppEnvironment {
 
     aiAvailability = await availability
     entitlements = await currentEntitlements
+  }
+
+  /// Rechecks state that can change after Apple Intelligence finishes preparing.
+  func refreshAIAvailability() async {
+    aiAvailability = await assistant.availability
   }
 
   /// Restores App Store purchases and immediately applies the refreshed access state.
@@ -123,10 +128,15 @@ final class AppEnvironment {
   /// Requests an assistant response and publishes the resulting UI state.
   func requestAssistantResponse(for text: String) async {
     guard !isGenerating else { return }
+    isGenerating = true
+    defer { isGenerating = false }
 
     assistantResponse = nil
     assistantErrorMessage = nil
 
+    if !isAIAvailable {
+      await refreshAIAvailability()
+    }
     guard isAIAvailable else {
       assistantErrorMessage = String(localized: "The on-device assistant is unavailable.")
       return
@@ -137,11 +147,14 @@ final class AppEnvironment {
       return
     }
 
-    isGenerating = true
-    defer { isGenerating = false }
+    let requestText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !requestText.isEmpty else {
+      assistantErrorMessage = AIError.emptyPrompt.localizedDescription
+      return
+    }
 
     do {
-      let response = try await assistant.respond(to: text)
+      let response = try await assistant.proposePause(to: requestText)
       try Task.checkCancellation()
       assistantResponse = response
     } catch AIError.cancelled {

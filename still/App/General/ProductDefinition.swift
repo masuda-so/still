@@ -39,9 +39,9 @@ struct ProductDefinition {
     assistantTitle: String(localized: "Pause Guide"),
     assistantOutputTitle: String(localized: "Pause"),
     assistantInstructions:
-      "Offer a brief, optional grounding pause. Do not diagnose, provide treatment, imply crisis support, or encourage dependence. If the content describes immediate danger, do not continue the pause exercise.",
+      "Offer a brief, optional grounding pause. Do not diagnose, provide treatment, imply crisis support, or encourage dependence. If the content describes immediate danger, choose doNotOfferPause and do not provide a pause exercise.",
     assistantPromptPrefix:
-      "Offer one simple pause of under two minutes and one optional reflection for this moment:",
+      "Offer one simple pause of one or two minutes and one optional reflection for this moment:",
     settingsPrivacySummary: String(
       localized: "Your completed pauses stay on this device."
     ),

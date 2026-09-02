@@ -22,6 +22,59 @@ nonisolated struct AIResponse: Codable, Equatable, Sendable {
   let text: String
 }
 
+/// A typed, reviewable result from Still's guided-generation schema.
+nonisolated struct StillPauseProposal: Codable, Equatable, Sendable {
+  enum Disposition: String, Codable, Equatable, Sendable {
+    case offerPause
+    case doNotOfferPause
+  }
+
+  let disposition: Disposition
+  let guidance: String
+  let reflection: String
+  let durationInMinutes: Int?
+
+  var recommendedDurationInMinutes: Int? {
+    disposition == .offerPause ? durationInMinutes : nil
+  }
+
+  var displayText: String {
+    [guidance, reflection]
+      .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+      .filter { !$0.isEmpty }
+      .joined(separator: "\n\n")
+  }
+
+  static func generatedPause(
+    durationInMinutes: Int,
+    guidance: String,
+    reflection: String
+  ) throws -> StillPauseProposal {
+    let guidance = guidance.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard (1...2).contains(durationInMinutes), !guidance.isEmpty else {
+      throw AIError.generationFailed(debugDescription: "Invalid guided pause proposal.")
+    }
+    return StillPauseProposal(
+      disposition: .offerPause,
+      guidance: guidance,
+      reflection: reflection.trimmingCharacters(in: .whitespacesAndNewlines),
+      durationInMinutes: durationInMinutes
+    )
+  }
+
+  static var immediateSafetyConcern: StillPauseProposal {
+    StillPauseProposal(
+      disposition: .doNotOfferPause,
+      guidance: String(
+        localized:
+          "A guided pause isn’t appropriate for an immediate safety concern. Contact local emergency services or a person you trust now."
+      ),
+      reflection: "",
+      durationInMinutes: nil
+    )
+  }
+}
+
 /// A reason the on-device model can't accept requests.
 nonisolated enum AIUnavailableReason: String, Codable, CaseIterable, Equatable, Sendable {
   case unsupportedOS
