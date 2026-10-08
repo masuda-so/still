@@ -323,6 +323,16 @@
         }
       }
     },
+    "Cancel Pause" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "休息を中止"
+          }
+        }
+      }
+    },
     "Checking…" : {
       "localizations" : {
         "ja" : {
@@ -407,16 +417,6 @@
         }
       }
     },
-    "End Pause" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "休息を終了"
-          }
-        }
-      }
-    },
     "Enter a prompt before generating a response." : {
       "localizations" : {
         "ja" : {
@@ -453,6 +453,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "今この瞬間、どのように感じていますか？"
+          }
+        }
+      }
+    },
+    "If you cancel, this pause won’t appear in your history." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中止すると、この休息は履歴に残りません。"
           }
         }
       }

@@ -68,13 +68,19 @@ struct PausesView: View {
 
         Button(action: togglePause) {
           Label(
-            pauseTimer.isRunning ? "End Pause" : "Begin Pause",
+            pauseTimer.isRunning ? "Cancel Pause" : "Begin Pause",
             systemImage: pauseTimer.isRunning ? "stop.fill" : "play.fill"
           )
           .frame(maxWidth: .infinity)
         }
         .buttonStyle(.borderedProminent)
         .tint(environment.product.accent)
+
+        if pauseTimer.isRunning {
+          Text("If you cancel, this pause won’t appear in your history.")
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+        }
       }
     }
   }
