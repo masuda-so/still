@@ -1,0 +1,109 @@
+{
+  "identifier" : "Still-LOCAL-STOREKIT",
+  "nonRenewingSubscriptions" : [
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "1000000001",
+      "localizations" : [
+        {
+          "description" : "One-time access to Still Pro for 24 hours. This pass does not renew automatically.",
+          "displayName" : "Still Pro Daily Pass",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Still Proを24時間利用できる買い切りパスです。自動更新されません。",
+          "displayName" : "Still Pro デイリーパス",
+          "locale" : "ja_JP"
+        }
+      ],
+      "productID" : "llc.ether.still.pro.daily",
+      "referenceName" : "Still Pro Daily Pass",
+      "type" : "NonRenewingSubscription"
+    }
+  ],
+  "products" : [
+  ],
+  "settings" : {
+    "_locale" : "en_US",
+    "_storefront" : "USA"
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "Still-PRO",
+      "localizations" : [
+        {
+          "locale" : "en_US",
+          "name" : "Still Pro"
+        },
+        {
+          "locale" : "ja_JP",
+          "name" : "Still Pro"
+        }
+      ],
+      "name" : "Still Pro",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+          ],
+          "codeOffers" : [
+          ],
+          "displayPrice" : "2.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "2000000001",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Monthly access to the on-device Still assistant.",
+              "displayName" : "Still Pro Monthly",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "オンデバイスのStillアシスタントを月ごとに利用できます。",
+              "displayName" : "Still Pro 月額",
+              "locale" : "ja_JP"
+            }
+          ],
+          "productID" : "llc.ether.still.pro.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Still Pro Monthly",
+          "subscriptionGroupID" : "Still-PRO",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+          ],
+          "codeOffers" : [
+          ],
+          "displayPrice" : "29.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "2000000002",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Yearly access to the on-device Still assistant.",
+              "displayName" : "Still Pro Yearly",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "オンデバイスのStillアシスタントを年ごとに利用できます。",
+              "displayName" : "Still Pro 年額",
+              "locale" : "ja_JP"
+            }
+          ],
+          "productID" : "llc.ether.still.pro.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Still Pro Yearly",
+          "subscriptionGroupID" : "Still-PRO",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}
