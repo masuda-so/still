@@ -10,9 +10,10 @@ final stable Xcode toolchain.
 - Bundle ID: `llc.ether.still`
 - Minimum deployment target: iOS 18.0
 - Devices: iPhone and iPad
-- Version/build baseline: 1.0 (1)
-- Category, age rating, SKU, copyright, export compliance, content rights, and
-  final name availability: human/App Store Connect decisions
+- Version/build baseline: 1.0.2 (5)
+- Export compliance: `ITSAppUsesNonExemptEncryption = NO` in the app target
+- Category, age rating, SKU, copyright, content rights, and final name
+  availability: human/App Store Connect decisions
 
 ## In-App Purchases
 
