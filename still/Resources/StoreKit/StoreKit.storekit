@@ -7,12 +7,12 @@
       "internalID" : "1000000001",
       "localizations" : [
         {
-          "description" : "One-time access to Still Pro for 24 hours. This pass does not renew automatically.",
+          "description" : "24-hour Pro access. No automatic renewal.",
           "displayName" : "Still Pro Daily Pass",
           "locale" : "en_US"
         },
         {
-          "description" : "Still Proを24時間利用できる買い切りパスです。自動更新されません。",
+          "description" : "Proを24時間利用。自動更新はありません。",
           "displayName" : "Still Pro デイリーパス",
           "locale" : "ja_JP"
         }
@@ -34,11 +34,13 @@
       "localizations" : [
         {
           "locale" : "en_US",
-          "name" : "Still Pro"
+          "displayName" : "Still Pro",
+          "description" : ""
         },
         {
           "locale" : "ja_JP",
-          "name" : "Still Pro"
+          "displayName" : "Still Pro",
+          "description" : ""
         }
       ],
       "name" : "Still Pro",
@@ -55,12 +57,12 @@
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Monthly access to the on-device Still assistant.",
+              "description" : "Monthly Pro access. Renews automatically.",
               "displayName" : "Still Pro Monthly",
               "locale" : "en_US"
             },
             {
-              "description" : "オンデバイスのStillアシスタントを月ごとに利用できます。",
+              "description" : "Proを1か月利用。自動更新します。",
               "displayName" : "Still Pro 月額",
               "locale" : "ja_JP"
             }
@@ -83,12 +85,12 @@
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Yearly access to the on-device Still assistant.",
+              "description" : "Yearly Pro access. Renews automatically.",
               "displayName" : "Still Pro Yearly",
               "locale" : "en_US"
             },
             {
-              "description" : "オンデバイスのStillアシスタントを年ごとに利用できます。",
+              "description" : "Proを1年間利用。自動更新します。",
               "displayName" : "Still Pro 年額",
               "locale" : "ja_JP"
             }
