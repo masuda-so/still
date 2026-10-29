@@ -63,6 +63,8 @@ steps.
 
 ## Development and contributions
 
+GitHub Actions runs nine purchase-related scenarios in a dedicated StoreKit workflow alongside the normal CI. It verifies completion of the same transaction ID and compares an isolated run of that scenario with the full nine-test class. See [structure and validation](Docs/Structure.md#continuous-integration) for the environment, remaining warnings, and coverage. Passing CI does not establish behavior on physical devices or the production store.
+
 Use the support route above for product help. For repository changes, consult the
 implementation references and release gates linked above, and describe the change
 and its validation in a pull request. PR descriptions and review comments use Japanese by default; an explicit request for another language takes precedence.

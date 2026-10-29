@@ -72,23 +72,30 @@ final class StoreKitIntegrationTests: XCTestCase {
     }
 
     print("StoreKit stream phase \(Date()): create unfinished monthly purchase")
-    _ = try await session.buyProduct(identifier: StillCommerceCatalog.monthlyProductID)
+    let seededTransaction = try await session.buyProduct(identifier: StillCommerceCatalog.monthlyProductID)
     print("StoreKit stream phase \(Date()): inspect unfinished transactions")
 
-    var unfinishedProductIDs: Set<String> = []
+    var unfinishedTransactionIDs: Set<UInt64> = []
     try await waitForStoreKitState("seeded monthly purchase to be visible as unfinished before subscribing") {
-      unfinishedProductIDs.removeAll()
+      unfinishedTransactionIDs.removeAll()
       for await result in Transaction.unfinished {
         if case .verified(let transaction) = result {
-          unfinishedProductIDs.insert(transaction.productID)
+          unfinishedTransactionIDs.insert(transaction.id)
         }
       }
-      return unfinishedProductIDs.contains(StillCommerceCatalog.monthlyProductID)
+      return unfinishedTransactionIDs.contains(seededTransaction.id)
     }
-    XCTAssertTrue(unfinishedProductIDs.contains(StillCommerceCatalog.monthlyProductID))
+    XCTAssertTrue(unfinishedTransactionIDs.contains(seededTransaction.id))
 
     print("StoreKit stream phase \(Date()): subscribe to client updates")
-    let client = StoreKitSubscriptionClient(catalog: StillCommerceCatalog.catalog)
+    let finishRecorder = TransactionFinishRecorder()
+    let client = StoreKitSubscriptionClient(
+      catalog: StillCommerceCatalog.catalog,
+      finishTransaction: { transaction in
+        await transaction.finish()
+        await finishRecorder.record(transaction.id)
+      }
+    )
     let updates = await client.entitlementUpdates()
     var snapshot: EntitlementSnapshot?
     var didReceiveFirstSnapshot = false
@@ -117,16 +124,20 @@ final class StoreKitIntegrationTests: XCTestCase {
     )
 
     print("StoreKit stream phase \(Date()): confirm transaction completion")
-    try await waitForStoreKitState("stream-handled monthly transaction to finish") {
-      unfinishedProductIDs.removeAll()
+    var didFinishSeededTransaction = false
+    try await waitForStoreKitState("seeded monthly transaction to be finished by the client") {
+      didFinishSeededTransaction = await finishRecorder.contains(seededTransaction.id)
+      unfinishedTransactionIDs.removeAll()
       for await result in Transaction.unfinished {
         if case .verified(let transaction) = result {
-          unfinishedProductIDs.insert(transaction.productID)
+          unfinishedTransactionIDs.insert(transaction.id)
         }
       }
-      return !unfinishedProductIDs.contains(StillCommerceCatalog.monthlyProductID)
+      return didFinishSeededTransaction
+        && !unfinishedTransactionIDs.contains(seededTransaction.id)
     }
-    XCTAssertFalse(unfinishedProductIDs.contains(StillCommerceCatalog.monthlyProductID))
+    XCTAssertTrue(didFinishSeededTransaction)
+    XCTAssertFalse(unfinishedTransactionIDs.contains(seededTransaction.id))
   }
 
   @MainActor
@@ -413,4 +424,16 @@ final class StoreKitIntegrationTests: XCTestCase {
     return await client.currentEntitlements()
   }
 
+}
+
+private actor TransactionFinishRecorder {
+  private var transactionIDs: Set<UInt64> = []
+
+  func record(_ transactionID: UInt64) {
+    transactionIDs.insert(transactionID)
+  }
+
+  func contains(_ transactionID: UInt64) -> Bool {
+    transactionIDs.contains(transactionID)
+  }
 }
