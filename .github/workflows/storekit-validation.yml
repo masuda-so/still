@@ -8,6 +8,9 @@ on:
       - '.github/workflows/storekit-validation.yml'
       - 'still/Resources/StoreKit/StoreKit.storekit'
       - 'stillTests/Integration/StoreKitIntegrationTests.swift'
+      - 'still/App/StillApp.swift'
+      - 'still/App/General/AppEnvironment.swift'
+      - 'still.xcodeproj/xcshareddata/xcschemes/still.xcscheme'
 
 permissions:
   contents: read
