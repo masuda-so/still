@@ -35,7 +35,7 @@ inspection serially against the current source.
 - [ ] StoreKit end-to-end scenarios pass on a compatible runtime, physical
       device, or TestFlight environment.
 
-## App Store gates
+## App Store submission gates
 
 - Confirm the App Store Connect record, distribution team/signing, version/build,
   and provisioning for `llc.ether.still`.

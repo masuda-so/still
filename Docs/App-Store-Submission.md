@@ -28,7 +28,7 @@ type, localization, pricing, availability, tax/category data, review screenshots
 and first-product submission require an App Store Connect user. The local
 StoreKit file is test data and is excluded from the app bundle.
 
-## Legal and support destinations
+## Fixed public URLs
 
 The shipped product definition points to Ether LLC's app-document routes:
 
@@ -40,13 +40,16 @@ Confirm anonymous mobile reachability after the production deployment and before
 submission. If a URL changes, update the product definition, documentation,
 tests, App Store Connect metadata, and final Archive together.
 
-## Privacy and review notes
+## Privacy and data handling
 
 - Pause history stays in the local SwiftData store. Foundation Models requests
   run on device; no remote AI provider is configured.
 - The privacy manifest currently declares no tracking, collected data, or listed
   Required Reason API use. Recheck source and the final Archive after every
   dependency or platform-API change.
+
+## Review notes to prepare
+
 - Explain the usable free pause/history path and that the assistant is optional,
   explicitly invoked, on-device, and availability-gated.
 - Explain the non-renewing Daily Pass, restore, Manage Subscription, and verified
@@ -63,7 +66,14 @@ required sizes and appearances using the final stable toolchain. Apple Developer
 Support case `20000121467132` is historical correspondence; App Review makes the
 final determination.
 
-## Technical and external gates
+## Licensed Apple sample material
+
+Still incorporates portions of Apple's distributed sample code and related
+Apple samples. Keep the applicable source links, copyright notices, and license
+text in `THIRD_PARTY_NOTICES.md`, and include the used code and assets in the
+final legal/content-rights review. Apple names do not imply endorsement.
+
+## Technical gate
 
 - [ ] Static project, localization, privacy, Required Reason API, and public-URL
       checks pass against the current tree.
@@ -77,7 +87,10 @@ final determination.
 - [ ] Verify legal and support URLs and approve metadata, screenshots, privacy
       answers, IAPs, subscriptions, accessibility, and review notes.
 
-Signing, validation, upload, TestFlight distribution, publication, and external
-messages remain outside this task unless separately authorized. Record the
-selected toolchain, test results, Archive inspection, and public-URL checks after
-revalidation; do not reuse results from an earlier revision.
+No signing, upload, publication, or external message is performed without
+separate authorization.
+
+Record the selected stable Xcode/SDK/runtime, test results, Analyze result,
+Archive identity and contents, and public-URL checks after the current tree is
+revalidated. Do not reuse results or hashes from an earlier revision. The
+remaining gates are summarized in [Release.md](Release.md).

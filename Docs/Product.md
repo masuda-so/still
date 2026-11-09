@@ -3,12 +3,18 @@
 Still is a quiet pause app built around short, optional moments of rest. It includes
 timed pause sessions and private local history.
 
-## Initial navigation
+## Navigation
 
 - Pauses
 - Assistant
 - Pro
 - Settings
+
+## Core experience
+
+Completed pauses are stored on device with SwiftData. People can choose a
+one-to-ten-minute duration, end a running pause, review recent sessions, and
+delete individual history entries.
 
 ## Commerce baseline
 
